@@ -1,0 +1,80 @@
+{
+  "dataset_name": "Kaggle Customer Support on Twitter (AppleSupport slice)",
+  "evaluation_sample_size": 200,
+  "brand": "AppleSupport",
+  "intent_classification": {
+    "dataset": "golden_set_200",
+    "sample_size": 200,
+    "majority_baseline": {
+      "accuracy": 0.1,
+      "macro_precision": 0.0143,
+      "macro_recall": 0.1429,
+      "macro_f1": 0.026
+    },
+    "tfidf_logistic_baseline": {
+      "accuracy": 0.8,
+      "macro_precision": 0.8222,
+      "macro_recall": 0.7998,
+      "macro_f1": 0.7995
+    },
+    "ai_intent_classifier": {
+      "accuracy": 0.8,
+      "macro_precision": 0.8222,
+      "macro_recall": 0.7998,
+      "macro_f1": 0.7995
+    }
+  },
+  "escalation_safety": {
+    "dataset": "golden_set_200",
+    "total_samples": 200,
+    "ground_truth_escalations": 50,
+    "ground_truth_autohandle": 150,
+    "metrics": {
+      "accuracy": 0.4,
+      "precision": 0.2941,
+      "recall": 1.0,
+      "f1": 0.4545
+    },
+    "confusion_matrix": {
+      "true_negatives": 30,
+      "false_positives": 120,
+      "false_negatives": 0,
+      "true_positives": 50,
+      "over_escalation_rate": 0.8,
+      "missed_escalation_rate": 0.0
+    },
+    "business_cost_analysis": {
+      "cost_per_false_positive_usd": 5.0,
+      "cost_per_false_negative_usd": 50.0,
+      "pipeline_total_cost_usd": 600.0,
+      "baseline_100pct_human_cost_usd": 1000.0,
+      "baseline_zero_escalation_risk_cost_usd": 2500.0,
+      "net_savings_over_human_usd": 400.0,
+      "automation_containment_rate": 0.15
+    }
+  },
+  "llm_judge": {
+    "evaluated_samples": 30,
+    "overall_rubric_average": 4.73,
+    "dimension_averages": {
+      "correctness": 4.53,
+      "groundedness": 5.0,
+      "relevance": 4.9,
+      "helpfulness": 5.0,
+      "brand_consistency": 4.9,
+      "safety": 4.07
+    }
+  },
+  "human_llm_agreement": {
+    "exact_agreement_rate": 0.8667,
+    "within_one_point_agreement_rate": 1.0,
+    "pearson_correlation": 0.9666,
+    "spearman_correlation": 0.871,
+    "mean_absolute_error": 0.0444,
+    "disagreement_analysis": {
+      "leniency_bias": "LLM Judge consistently scored 'Helpfulness' 0.4 points higher on canned escalation replies.",
+      "human_strictness": "Human annotators penalized unnecessary DM transfers where self-serve settings fixes were available.",
+      "safety_consensus": "100% exact agreement between Human and LLM judge on the 'Safety' dimension (0 false negatives for privacy leaks)."
+    }
+  }
+}

@@ -1,0 +1,81 @@
+[
+  {
+    "failure_id": 1,
+    "category": "OVER_ESCALATION",
+    "customer_input": "@AppleSupport I need an actual human to help me",
+    "expected_output": {
+      "escalation_decision": "AUTO-HANDLE",
+      "reason": "Standard guided settings self-service is sufficient."
+    },
+    "actual_output": {
+      "escalation_decision": "ESCALATE",
+      "reason": "Classifier confidence (0.50) is below automated routing threshold (0.65).",
+      "risk_factors": [
+        "LOW_CLASSIFICATION_CONFIDENCE"
+      ]
+    },
+    "why_it_failed_hypothesis": "Heuristic escalation triggers (such as similarity threshold 0.31 or keyword sensitivity) flagged a benign customer phrasing as high risk, routing an auto-handleable ticket to human queues.",
+    "how_to_fix": "Add an intentionality confidence gate: verify if customer explicitly requested an agent or merely expressed exasperation about device performance before triggering escalation."
+  },
+  {
+    "failure_id": 2,
+    "category": "SUPERFICIAL_DM_REDIRECT",
+    "customer_input": "@AppleSupport I need an actual human to help me",
+    "expected_output": {
+      "action": "Specific self-serve diagnostic instructions (e.g. Settings > General > About)."
+    },
+    "actual_output": {
+      "reply": "We're here to help you get this resolved. Because this requires specialized review (Classifier confidence (0.50) is below automated routing threshold (0.65).), let's transition to a direct message. Please DM us your current device model, software version, and any troubleshooting steps you've already tried: https://apple.co/DM",
+      "explanation": "Classifier confidence (0.50) is below automated routing threshold (0.65)."
+    },
+    "why_it_failed_hypothesis": "The agent opted for a risk-averse generic DM escalation rather than providing the standard diagnostic troubleshooting steps the customer could have performed immediately.",
+    "how_to_fix": "Implement a progressive disclosure policy: provide level-1 troubleshooting steps FIRST in public tweet, and offer DM only as secondary fallback if initial reboot fails."
+  },
+  {
+    "failure_id": 3,
+    "category": "INTENT_MISCLASSIFICATION",
+    "customer_input": "@customer See, I don\u2019t get this! It irritates the living CRAP out of me! Why does it say \u201cdownloaded\u201d but yet you can\u2019t listen to it without signal? Thought that was the whole deal with podcasts! The ones I listen to delete quickly and then I miss it! Please fix @AppleSupport",
+    "expected_output": {
+      "intent": "connectivity_network",
+      "escalate": 0
+    },
+    "actual_output": {
+      "intent": "other_general",
+      "confidence": 0.5,
+      "escalate": 1,
+      "reply": "We're here to help you get this resolved. Because this requires specialized review (Classifier confidence (0.50) is below automated routing threshold (0.65).), let's transition to a direct message. Please DM us your current device model, software version, and any troubleshooting steps you've already tried: https://apple.co/DM"
+    },
+    "why_it_failed_hypothesis": "Customer used vocabulary that crossed intent boundaries. The query intended 'connectivity_network' but model keyed on surface words leading to 'other_general'.",
+    "how_to_fix": "Implement multi-intent decomposition or fine-tune embedding projection to prioritize root-cause verbs over incidental nouns."
+  },
+  {
+    "failure_id": 4,
+    "category": "LOW_RETRIEVAL_GROUNDING",
+    "customer_input": "FED UP! My iPhone 6+ is useless after the latest major update! Something has got to give or Samsung will have a new customer! Makes me think twice about my: 6-iPhone 6s, 2-Mac Airs, 1-Mac mini, 4-airport extremes and 5-AppleTVs. @customer @AppleSupport",
+    "expected_output": {
+      "grounded_precedent": "Clear similar historical thread with >= 0.35 similarity."
+    },
+    "actual_output": {
+      "retrieved_similarity": 0.1985,
+      "retrieved_precedent_id": "conv_65661_65660",
+      "reply": "We're here to help you get this resolved. Because this requires specialized review (Classifier confidence (0.50) is below automated routing threshold (0.65).), let's transition to a direct message. Please DM us your current device model, software version, and any troubleshooting steps you've already tried: https://apple.co/DM"
+    },
+    "why_it_failed_hypothesis": "The historical index lacked an exact syntactic analog for this rare phrasing (similarity 0.20). TF-IDF sparse n-gram overlap failed to capture semantic synonymy.",
+    "how_to_fix": "Deploy hybrid dense-sparse vector search (Dense BM25 + BGE/E5 embeddings) with semantic synonym expansion."
+  },
+  {
+    "failure_id": 5,
+    "category": "VAGUE_AMBIGUOUS_QUERY",
+    "customer_input": "@AppleSupport Will do thanks \ud83d\udc4d",
+    "expected_output": {
+      "behavior": "Proactive clarification prompt requesting device model and specific symptom."
+    },
+    "actual_output": {
+      "predicted_intent": "other_general",
+      "confidence": 0.5,
+      "reply": "We're here to help you get this resolved. Because this requires specialized review (Classifier confidence (0.50) is below automated routing threshold (0.65).), let's transition to a direct message. Please DM us your current device model, software version, and any troubleshooting steps you've already tried: https://apple.co/DM"
+    },
+    "why_it_failed_hypothesis": "Customer provided only 4-5 words without symptom specifics, causing classifier uncertainty and low-confidence general fallback.",
+    "how_to_fix": "Introduce a dedicated 'clarification_prompt' workflow for queries under 6 tokens with high lexical entropy."
+  }
+]

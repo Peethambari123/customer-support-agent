@@ -1,0 +1,6 @@
+{
+  "name": "AI Customer Support Agent",
+  "description": "Historically Grounded Support • Intent Classification • Safe Escalation",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
